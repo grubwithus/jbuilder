@@ -76,7 +76,7 @@ class Jbuilder
     @cache_store = value
   end
 
-  def cache_store!(value)
+  def self.cache_store!(value)
     @@cache_store = value
   end
 
