@@ -4,16 +4,19 @@ require 'jbuilder/key_formatter'
 require 'jbuilder/errors'
 require 'multi_json'
 require 'ostruct'
+require 'active_support/cache'
 
 class Jbuilder
   @@key_formatter = nil
   @@ignore_nil    = false
+  @@cache_store   = ::Rails.cache
 
   def initialize(options = {})
     @attributes = {}
 
     @key_formatter = options.fetch(:key_formatter){ @@key_formatter ? @@key_formatter.clone : nil}
     @ignore_nil = options.fetch(:ignore_nil, @@ignore_nil)
+    @cache_store = options.fetch(:cache_store, @@cache_store)
 
     yield self if ::Kernel.block_given?
   end
@@ -67,6 +70,14 @@ class Jbuilder
     else
       set!(*args)
     end
+  end
+
+  def cache_store(value)
+    @cache_store = value
+  end
+
+  def cache_store!(value)
+    @@cache_store = value
   end
 
   # Specifies formatting to be applied to the key. Passing in a name of a function

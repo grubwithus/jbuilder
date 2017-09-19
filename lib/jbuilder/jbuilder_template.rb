@@ -135,14 +135,14 @@ class JbuilderTemplate < Jbuilder
 
   def _read_fragment_cache(key, options = nil)
     @context.controller.instrument_fragment_cache :read_fragment, key do
-      ::Rails.cache.read(key, options)
+     @cache_store.read(key, options)
     end
   end
 
   def _write_fragment_cache(key, options = nil)
     @context.controller.instrument_fragment_cache :write_fragment, key do
       yield.tap do |value|
-        ::Rails.cache.write(key, value, options)
+        @cache_store.write(key, value, options)
       end
     end
   end
